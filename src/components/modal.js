@@ -4,12 +4,14 @@ function openModal(popup) {
     document.addEventListener('keydown', handleCloseByEsc);
     popup.addEventListener('click', handleCloseByOverlay);
 }
+
 //ФУНКЦИЯ ЗАКРЫТИЯ ПОПАПА
 function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
     document.removeEventListener('keydown', handleCloseByEsc);
     popup.removeEventListener('click', handleCloseByOverlay);
 }
+
 //ФУНКЦИЯ ЗАКРЫТИЯ ПОПАПА ПО КЛИКУ НА ESCAPE
 function handleCloseByEsc(evt) {
     if(evt.key === 'Escape') {
