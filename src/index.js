@@ -28,7 +28,7 @@ const openImagePopup = function(event) {
 initialCards.forEach(function(item) {
     cardsContainer.append(createCard(item, deleteCard, likeCard, openImagePopup));
 })
-
+ 
 //ОТКРЫТИЕ И ЗАКРЫТИЕ МЕНЮ ДЛЯ РЕДАКТИРОВАНИЯ ИМЕНИ И ЗАНЯТИЯ
 const profileEditButton = document.querySelector('.profile__edit-button');
 profileEditButton.addEventListener('click', function() {
@@ -73,7 +73,7 @@ function addCard() {
         name: popupTypeNewCardNameInput.value, 
         link: popupTypeNewCardLinkInput.value
     }
-    cardsContainer.append(createCard(cardData, deleteCard, likeCard, openImagePopup))
+    cardsContainer.prepend(createCard(cardData, deleteCard, likeCard, openImagePopup))
 }
 
 //КНОПКА СОХРАНИТЬ В МЕНЮ  ДЛЯ СОЗДАНИЯ НОВОЙ КАРТОЧКИ
