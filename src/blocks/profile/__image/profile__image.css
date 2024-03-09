@@ -1,4 +1,5 @@
 .profile__image {
+  position: relative;
   width: 120px;
   height: 120px;
   -webkit-border-radius: 50%;
@@ -7,7 +8,27 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
-  background-image: url('../../../images/avatar.jpg');
+  overflow: clip;
+  cursor: pointer;
+}
+
+.profile__image img {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile__image:hover img {
+  filter: brightness(.5);
+} 
+
+.profile__image:hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url('../../../images/edit-icon.svg') center no-repeat;
+  background-size: 20px;
 }
 
 @media screen and (max-width: 740px) {
