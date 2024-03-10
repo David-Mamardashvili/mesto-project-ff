@@ -1,32 +1,32 @@
 //ФУНКЦИЯ ПОКАЗА ОШИБКИ
-const showInputError = (formElement, inputElement, errorMessage) => {
+const showInputError = (formElement, inputElement, errorMessage, validationConfig) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.add('popup__input_type_error');
+    inputElement.classList.add(validationConfig.inputErrorClass);
     errorElement.textContent = errorMessage;
-    errorElement.classList.add('popup__error_visible');
+    errorElement.classList.add(validationConfig.errorClass);
 }
 
 //ФУНКЦИЯ СКРЫТИЯ ОШИБКИ
-const hideInputError = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement, validationConfig) => {
     const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
-    inputElement.classList.remove('popup__input_type_error');
+    inputElement.classList.remove(validationConfig.inputErrorClass);
     errorElement.textContent = '';
-    errorElement.classList.remove('popup__error_visible');
+    errorElement.classList.remove(validationConfig.errorClass);
 }
 
 //ФУНКЦИЯ ПРОВЕРКИ ВАЛИДАЦИИ ПОЛЯ
-const isValid = (formElement, inputElement) => {
+const isValid = (formElement, inputElement, validationConfig) => {
     if (inputElement.validity.patternMismatch) {
-    inputElement.setCustomValidity("Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы");
+    inputElement.setCustomValidity(inputElement.dataset.errorMessage);
     } 
     else {
     inputElement.setCustomValidity("");
     }
     if(!inputElement.validity.valid) {
-        showInputError(formElement, inputElement, inputElement.validationMessage);
+        showInputError(formElement, inputElement, inputElement.validationMessage, validationConfig);
     }
     else  {
-        hideInputError(formElement, inputElement);
+        hideInputError(formElement, inputElement, validationConfig);
     }
 }
 
@@ -38,47 +38,45 @@ const isValid = (formElement, inputElement) => {
 }
 
 //ФУНКЦИЯ КОТОРАЯ БЛОКИРУЕТ КНОПКУ "ОТПРАВИТЬ" В СЛУЧАЕ ЕСЛИ ХОТЬ ОДИН ИНПУТ НЕ ПРОШЕЛ ВАЛИДАЦИЮ
-const toggleButtonState = (inputList, buttonElement) => {
+const toggleButtonState = (inputList, buttonElement, validationConfig) => {
     if (hasInvalidInput(inputList)) {
         buttonElement.disabled = true;
-        buttonElement.classList.add('popup__button_disabled');
+        buttonElement.classList.add(validationConfig.inactiveButtonClass);
     } else {
         buttonElement.disabled = false;
-        buttonElement.classList.remove('popup__button_disabled');
+        buttonElement.classList.remove(validationConfig.inactiveButtonClass);
     }
   }; 
 
 //ДОБАВЛЕНИЕ ОБРАБОТЧИКА ВСЕМ ПОЛЯМ
-const setEventListeners = (formElement) => {
-    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-    const buttonElement = formElement.querySelector('.popup__button');
-    toggleButtonState(inputList, buttonElement);
+const setEventListeners = (formElement, validationConfig) => {
+    const inputList = Array.from(formElement.querySelectorAll(validationConfig.inputSelector));
+    const buttonElement = formElement.querySelector(validationConfig.submitButtonSelector);
+    toggleButtonState(inputList, buttonElement, validationConfig);
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', () => {
-            isValid(formElement, inputElement);
-            toggleButtonState(inputList, buttonElement);
+            isValid(formElement, inputElement, validationConfig);
+            toggleButtonState(inputList, buttonElement, validationConfig);
         })
     })
 }
 
 //ДОБАВЛЕНИЕ ОБРАБОТЧИКА ВСЕМ ФОРМАМ
-const enableValidation = () => {
-    const formList = Array.from(document.querySelectorAll('.popup__form'));
+const enableValidation = (validationConfig) => {
+    const formList = Array.from(document.querySelectorAll(validationConfig.formSelector));
     formList.forEach((formElement) => {
-        setEventListeners(formElement);
+        setEventListeners(formElement, validationConfig);
     })
 }
 
 //ФУНКЦИЯ КОТОРАЯ ОЧИЩАЕТ ОШИБКИ ВАЛИДАЦИИ ФОРМЫ И ДЕЛАЕТ КНОПКУ НЕ АКТИВНОЙ
 const clearValidation = (profileForm, validationConfig) => {
-    const errorElements = Array.from(profileForm.querySelectorAll(validationConfig.noErrorClass));
-    errorElements.forEach((errorElement) => {
-       errorElement.classList.remove(validationConfig.errorClass);
-       errorElement.textContent = '';
-    }) 
+    const buttonElement= profileForm.querySelector(validationConfig.submitButtonSelector);
+    buttonElement.disabled = true;
+    buttonElement.classList.add(validationConfig.inactiveButtonClass);
     const inputElements = Array.from(profileForm.querySelectorAll(validationConfig.inputSelector));
     inputElements.forEach((inputElement) => {
-        inputElement.classList.remove(validationConfig.inputErrorClass);
+        hideInputError(profileForm, inputElement, validationConfig)
     }) 
 }
 

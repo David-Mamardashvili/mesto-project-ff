@@ -12,14 +12,7 @@
   cursor: pointer;
 }
 
-.profile__image img {
-  position: absolute;
-  inset: 0;
-  height: 100%;
-  object-fit: cover;
-}
-
-.profile__image:hover img {
+.profile__image:hover  {
   filter: brightness(.5);
 } 
 
