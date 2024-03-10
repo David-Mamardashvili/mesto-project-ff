@@ -96,13 +96,4 @@ const deleteLike = async (cardId) => {
   return await res.json();
 };
 
-export {
-  downloadingCards,
-  downloadingInformation,
-  sendingInformation,
-  sendingAvatar,
-  sendingCard,
-  deleteCard,
-  addLike,
-  deleteLike,
-};
+export { downloadingCards, downloadingInformation, sendingInformation, sendingAvatar, sendingCard, deleteCard, addLike, deleteLike };
