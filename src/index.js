@@ -3,7 +3,7 @@ import { createCard, removeCard, likeCard } from "../src/components/card";
 import { openModal, closeModal } from "../src/components/modal";
 import { enableValidation, clearValidation } from "./components/validation";
 import { validationConfig } from "./components/validationConfig";
-import { downloadingCards, downloadingInformation, sendingInformation, sendingAvatar, sendingCard } from "./components/api";
+import { getCards, getInformation, sendingInformation, sendingAvatar, sendingCard } from "./components/api";
 
 const cardsContainer = document.querySelector(".places__list");
 const profileImage = document.querySelector(".profile__image");
@@ -130,7 +130,7 @@ popupImageCloseButton.addEventListener("click", function () {
   closeModal(popupTypeImage);
 });
 
-Promise.all([downloadingInformation(), downloadingCards()])
+Promise.all([getInformation(), getCards()])
   .then((result) => {
     profileImage.setAttribute("style", `background-image: url('${result[0].avatar}')`);
     profileTitle.textContent = result[0].name;

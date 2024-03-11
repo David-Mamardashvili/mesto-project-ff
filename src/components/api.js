@@ -7,28 +7,26 @@ const config = {
   },
 };
 
+//ФУНКЦИЯ ПРЕОБРАЗОВАНИЯ В JSON
+function getResponseData(res) {
+  if (!res.ok) {
+    return Promise.reject(`Ошибка: ${res.status}`);
+  }
+  return res.json();
+}
+
 //ЗАГРУЗКА КАРТОЧЕК С СЕРВЕРА
-const downloadingCards = () => {
+const getCards = () => {
   return fetch(config.baseUrl + "/cards", {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData);
 };
 
 //ЗАГРУЗКА ИНФОРМАЦИИ О ПОЛЬЗОВАТЕЛЕ С СЕРВЕРА
-const downloadingInformation = () => {
+const getInformation = () => {
   return fetch(config.baseUrl + "/users/me", {
     headers: config.headers,
-  }).then((res) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка: ${res.status}`);
-  });
+  }).then(getResponseData);
 };
 
 //ОТПРАВЛЕНИЕ НОВОЙ КАРТОЧКИ НА СЕРВЕР
@@ -40,8 +38,8 @@ const sendingCard = async (name, link) => {
       name: name,
       link: link,
     }),
-  });
-  return await res.json();
+  })
+  return await getResponseData(res);
 };
 
 //ОТПРАВЛЕНИЕ ИМЕНИ И ЗАНЯТИЯ О ПОЛЬЗОВАТЕЛЕ НА СЕРВЕР
@@ -54,7 +52,7 @@ const sendingInformation = async (name, about) => {
       about: about,
     }),
   });
-  return await res.json();
+  return await getResponseData(res);
 };
 
 //ОТПРАВЛЕНИЕ АВАТАРА ПОЛЬЗОВАТЕЛЯ
@@ -66,7 +64,7 @@ const sendingAvatar = async (avatar) => {
       avatar: avatar,
     }),
   });
-  return await res.json();
+  return await getResponseData(res);
 };
 
 //УДАЛЕНИЕ КАРТОЧКИ С СЕРВЕРА
@@ -75,7 +73,7 @@ const deleteCard = async (cardId) => {
     method: "DELETE",
     headers: config.headers,
   });
-  return await res.json();
+  return await getResponseData(res);
 };
 
 //ДОБАВЛЕНИЕ ЛАЙКА НА СЕРВЕР
@@ -84,7 +82,7 @@ const addLike = async (cardId) => {
     method: "PUT",
     headers: config.headers,
   });
-  return await res.json();
+  return await getResponseData(res);
 };
 
 //УДАЛЕНИЕ ЛАЙКА С СЕРВЕРА
@@ -93,7 +91,7 @@ const deleteLike = async (cardId) => {
     method: "DELETE",
     headers: config.headers,
   });
-  return await res.json();
+  return await getResponseData(res);
 };
 
-export { downloadingCards, downloadingInformation, sendingInformation, sendingAvatar, sendingCard, deleteCard, addLike, deleteLike };
+export { getCards, getInformation, sendingInformation, sendingAvatar, sendingCard, deleteCard, addLike, deleteLike };
