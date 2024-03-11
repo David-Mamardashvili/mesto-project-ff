@@ -13,13 +13,23 @@ const popupTypeImage = document.querySelector(".popup_type_image");
 const popupImageImage = popupTypeImage.querySelector(".popup__image");
 const popupImageCaption = popupTypeImage.querySelector(".popup__caption");
 const popupTypeEdit = document.querySelector(".popup_type_edit");
-const popupTypeEditNameInput = popupTypeEdit.querySelector(".popup__input_type_name");
-const popupTypeEditDescriptionInput = popupTypeEdit.querySelector(".popup__input_type_description");
+const popupTypeEditNameInput = popupTypeEdit.querySelector(
+  ".popup__input_type_name"
+);
+const popupTypeEditDescriptionInput = popupTypeEdit.querySelector(
+  ".popup__input_type_description"
+);
 const popupTypeNewCard = document.querySelector(".popup_type_new-card");
-const popupTypeNewCardNameInput = popupTypeNewCard.querySelector(".popup__input_type_card-name");
-const popupTypeNewCardLinkInput = popupTypeNewCard.querySelector(".popup__input_type_url");
+const popupTypeNewCardNameInput = popupTypeNewCard.querySelector(
+  ".popup__input_type_card-name"
+);
+const popupTypeNewCardLinkInput = popupTypeNewCard.querySelector(
+  ".popup__input_type_url"
+);
 const popupTypeAvatar = document.querySelector(".popup_type_avatar");
-const popupTypeAvatarInput = popupTypeAvatar.querySelector(".popup__input_type_url");
+const popupTypeAvatarInput = popupTypeAvatar.querySelector(
+  ".popup__input_type_url"
+);
 
 export { cardsContainer, openImagePopup, profileTitle, profileDescription, profileImage };
 enableValidation(validationConfig);
@@ -30,6 +40,16 @@ const popupList = document.querySelectorAll(".popup");
 popupList.forEach(function (popup) {
   popup.classList.add("popup_is-animated");
 });
+
+//ФУНКЦИЯ КОГДА ИДЕТ ЗАГРУЗКА
+function renderLoading(popupSubmit, isLoading) {
+  if(isLoading) {
+    popupSubmit.textContent = 'Сохранение...'
+  }
+  else {
+    popupSubmit.textContent = 'Сохранить'
+  }
+}
 
 //КОЛБЭК ИЗОБРАЖЕНИЯ
 const openImagePopup = function (event) {
@@ -55,8 +75,10 @@ popupEditCloseButton.addEventListener("click", function () {
 
 //КНОПКА СОХРАНИТЬ В МЕНЮ РЕДАКТИРОВАНИЯ ИМЕНИ И ЗАНЯТИЯ
 const popupFormEdit = popupTypeEdit.querySelector(".popup__form");
+const popupFormEditButton = popupFormEdit.querySelector(".popup__button");
 popupFormEdit.addEventListener("submit", function (evt) {
   evt.preventDefault();
+  renderLoading(popupFormEditButton, true);
   sendingInformation(
     popupTypeEditNameInput.value,
     popupTypeEditDescriptionInput.value
@@ -66,7 +88,10 @@ popupFormEdit.addEventListener("submit", function (evt) {
       profileDescription.textContent = response.about;
       closeModal(popupTypeEdit);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
+    .finally(() => {
+      renderLoading(popupFormEditButton, false);
+    });
 });
 
 //ОТКРЫТИЕ И ЗАКРЫТИЕ МЕНЮ ДЛЯ СОЗДАНИЯ НОВОЙ КАРТОЧКИ
@@ -83,8 +108,10 @@ popupAddCloseButton.addEventListener("click", function () {
 
 //КНОПКА СОХРАНИТЬ В МЕНЮ  ДЛЯ СОЗДАНИЯ НОВОЙ КАРТОЧКИ
 const popupFormCard = popupTypeNewCard.querySelector(".popup__form");
+const popupFormCardButton = popupFormCard.querySelector(".popup__button");
 popupFormCard.addEventListener("submit", function (evt) {
   evt.preventDefault();
+  renderLoading(popupFormCardButton, true);
   sendingCard(popupTypeNewCardNameInput.value, popupTypeNewCardLinkInput.value)
     .then((response) => {
       cardsContainer.prepend(
@@ -94,6 +121,9 @@ popupFormCard.addEventListener("submit", function (evt) {
       closeModal(popupTypeNewCard);
     })
     .catch((err) => console.log(err))
+    .finally(() => {
+      renderLoading(popupFormCardButton, false);
+    });
 });
 
 //ОТКРЫТИЕ И ЗАКРЫТИЕ МЕНЮ АВАТАРА
@@ -110,8 +140,10 @@ profileAvatarCloseButton.addEventListener("click", function () {
 
 //КНОПКА СОХРАНИТЬ В МЕНЮ  ДЛЯ ЗАМЕНЫ АВАТАРА
 const popupFormAvatar = popupTypeAvatar.querySelector(".popup__form");
+const popupFormAvatarButton = popupFormAvatar.querySelector(".popup__button");
 popupFormAvatar.addEventListener("submit", function (evt) {
   evt.preventDefault();
+  renderLoading(popupFormAvatarButton, true);
   sendingAvatar(popupTypeAvatarInput.value)
     .then((response) => {
       profileImage.setAttribute(
@@ -121,7 +153,10 @@ popupFormAvatar.addEventListener("submit", function (evt) {
       popupFormAvatar.reset();
       closeModal(popupTypeAvatar);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.log(err))
+    .finally(() => {
+      renderLoading(popupFormAvatarButton, false);
+    });
 });
 
 //ЗАКРЫТИЕ ПОПАПА ИЗОБРАЖЕНИЯ
@@ -132,7 +167,10 @@ popupImageCloseButton.addEventListener("click", function () {
 
 Promise.all([getInformation(), getCards()])
   .then((result) => {
-    profileImage.setAttribute("style", `background-image: url('${result[0].avatar}')`);
+    profileImage.setAttribute(
+      "style",
+      `background-image: url('${result[0].avatar}')`
+    );
     profileTitle.textContent = result[0].name;
     profileDescription.textContent = result[0].about;
     userId = result[0]._id;
